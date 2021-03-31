@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Mar 25 11:32:00 2021
+Created on Wed Mar 31 22:58:31 2021
 
 @author: Doan Van Chuong
 """
 
-
-# Create all list to contain dictionarys
+# Create all list to contain object
 students = []
 studentID = []
 courses = []
@@ -23,20 +22,49 @@ def number_course():
     num = int(input("Enter the number of courses in class: \n"))
     return num
 
+
+# define object student,course
+class Student:
+    def __init__(self, id, name, DoB):
+        self.id = id
+        self.name = name
+        self.DoB = DoB
+    
+    def display(self):
+        print(f"id: {self.id}  name: {self.name}  DoB: {self.DoB}")
+    
+class Course:
+    def __init__(self, id, name):
+        self.id = id
+        self.name = name
+    
+    def display(self):
+        print(f"id: {self.id}  name: {self.name}")
+
+class Mark:
+    def __init__(self, s_id, c_id, mark):
+        self.s_id = s_id
+        self.c_id = c_id
+        self.mark = mark
+    
+    def display(self):
+        print(f"CourseID: {self.c_id} \n + student have id: {self.s_id} has {self.mark} points")
+        
+        
 #function to add student
 def add_student():
-    name = input("Enter student Name: ")
     id = input("Enter Student ID: ")
+    name = input("Enter student Name: ")
     DoB = input("Enter DoB Student: ")
-    s = {'id':id,'name':name,'DoB':DoB}
+    s = Student(id,name,DoB)
     students.append(s)
     studentID.append(id)
     
 #function to add course
 def add_course():
-    name = input("Enter the Name of Course: ")
     id = input("Enter Course ID: ")
-    c = {'id':id,'name':name}
+    name = input("Enter the Name of Course: ")
+    c = Course(id,name)
     courses.append(c)
     courseID.append(id)
 
@@ -49,7 +77,7 @@ def assign_mark():
                 S_id = input("Enter Student ID: ")
                 if S_id in studentID:
                     mark = float(input("Enter mark of Student: "))
-                    m = {'S_id':S_id,'C_id':C_id,'mark':mark}
+                    m = Mark(S_id,S_id,mark)
                 else:
                     print("You enter wrong id of student")
                     break
@@ -57,23 +85,24 @@ def assign_mark():
         else:
             print("You enter wrong id of course")
             break
-      
+
 #function to display students
 def display_student():
     print("All student in class: ")
     for i in range(0,len(students)):
-        print(f"id: {students[i]['id']}  name: {students[i]['name']}  DoB: {students[i]['DoB']}")
+        Student.display(students[i])
 
 #function to display courses
 def display_course():
     print("All course in class")
     for i in range(0,len(courses)):
-        print(f"id: {courses[i]['id']}  name: {courses[i]['name']}")
-
+        Course.display(courses[i])
+    
 #function to display mark of student given the course
 def display_mark():
     for i in range(0,len(marks)):
-        print(f"CourseID: {marks[i]['C_id']} \n + student have id: {marks[i]['S_id']} has {marks[i]['mark']} points")
+        Mark.display(marks[i])
+
 
 #main function
 # add student into students list
