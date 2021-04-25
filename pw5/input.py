@@ -57,6 +57,10 @@ class main_in():
         screen.refresh()
         DoB = screen.getstr().decode()
         
+        f = open('Students.txt','a')
+        f.write("StudnetID: " + id + "\n" + "StudentName: " + name + "\n" + "SudentDoB: " + DoB)
+        f.close()
+        
         s = Student(id,name,DoB)
         students.append(s)
         studentID.append(id)
@@ -78,6 +82,10 @@ class main_in():
         screen.addstr("Enter Credit of Course: ")
         screen.refresh()
         credit = float(screen.getstr().decode())
+        
+        f = open('Courses.txt','a')
+        f.write("CourseID: " + id + "\n" + "CourseName: " + name + "\n" + "Course_credit: " + str(credit))
+        f.close()
         
         c = Course(id,name,credit)
         courses.append(c)
@@ -121,6 +129,11 @@ class main_in():
                 exit()
         else:
             exit() 
+        
+        f = open('Marks.txt','a')
+        f.write("CourseID: " + c_id + "\n" + "StudentID: " + s_id + "\n" + "Mark_detail: " + str(mark))
+        f.close()
+        
         mark_detail.append(mark)
         m = Mark(s_id,c_id,mark)
         marks.append(m)

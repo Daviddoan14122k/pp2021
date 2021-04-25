@@ -1,5 +1,8 @@
 
 import curses
+from zipfile import ZipFile
+import os
+import zipfile
 from output import main_out
 from input import main_in
 from domain.Student import *
@@ -49,7 +52,13 @@ def main():
             screen.addstr("say goodbye!!")
             curses.napms(2000)
             curses.endwin()
-            exit()
+            file_list = ['Students.txt', 'Courses.txt', 'Marks.txt']
+            with ZipFile('students.dat', 'w') as new_zip:
+                for file_Name in file_list:
+                    new_zip.write(file_Name)
+                for file_Name in file_list:
+                    os.remove(file_Name)
+            exit()  
             
     screen.refresh()
     screen.clear()
@@ -76,7 +85,9 @@ def main():
         screen.addstr("2. Display list of Courses: \n") 
         screen.addstr("3. Display marks \n")
         screen.addstr("4. GPA_descending \n")
-        screen.addstr("5. Stop \n")
+        screen.addstr("5. Stop and compress file \n")
+        screen.addstr("6. Decompress and load file \n")
+        screen.addstr("7. Stop \n")
         option3 = int(screen.getstr().decode())
         screen.refresh()
         screen.clear()
@@ -89,12 +100,35 @@ def main():
             main_out.display_mark()
         if option3 == 4:
             main_out.GPA_decending()
-        elif option3 == 5:
+        if option3 == 5:
+            file_list = ['Students.txt', 'Courses.txt', 'Marks.txt']
+            with ZipFile('students.dat', 'w') as new_zip:
+                for file_Name in file_list:
+                    new_zip.write(file_Name)
+                for file_Name in file_list:
+                    os.remove(file_Name)
+        if option3 == 6:
+            if os.path.isfile('students.dat'):
+                screen.addstr("This file students.dat exits \n")
+                zip_file = ZipFile('students.dat','r')
+                zip_file.extractall()
+                if os.path.isfile('Students.txt'):
+                    f = open('Students.txt','r')
+                    f.readline()
+                if os.path.isfile('Courses.txt'):
+                    f = open('Courses.txt','r')
+                    f.readline()
+                if os.path.isfile('Marks.txt'):
+                    f = open('Marks.txt','r')
+                    f.readline()
+        elif option3 == 7:
             screen.addstr("  Good bye,see you again\n  ")
             screen.refresh()
             curses.napms(1000)
             curses.endwin()
-            exit()  
+            exit()
+        
+              
 if __name__ == '__main__':
     main()
     

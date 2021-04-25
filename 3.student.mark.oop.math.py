@@ -13,9 +13,14 @@ import curses
 # Create all list to contain object
 students = []
 studentID = []
+studentName = []
+studentDoB = []
+
 courses = []
 courseID = []
-Course_credit = []
+course_Credit = []
+courseName = []
+
 marks = []
 mark_detail = []
 mark_gpa = []
@@ -134,6 +139,7 @@ def add_student():
     s = Student(id,name,DoB)
     students.append(s)
     studentID.append(id)
+    studentName.append(name)
     screen.refresh()
     screen.clear()
   
@@ -155,59 +161,61 @@ def add_course():
     c = Course(id,name,credit)
     courses.append(c)
     courseID.append(id)
-    Course_credit.append(credit)
+    courseName.append(name)
+    course_Credit.append(credit)
     screen.refresh()
     screen.clear()
 
 
 #function choose corese to assign mark for student
 def assign_mark():
-    for i in range(0,len(courses)):
+    screen.addstr("Enter the courseID you want to input mark: ")
+    c_id = (screen.getstr().decode())
+    screen.clear()
+    screen.refresh()
+    if c_id in courseID:
+        screen.addstr("Enter the StudentID you want to input mark: ")
+        s_id=screen.getstr().decode()
         screen.clear()
-        screen.addstr("Enter the courseID you want to input mark: ")
-        c_id = screen.getstr().decode()
         screen.refresh()
-        if c_id in courseID:
-            for j in range(0,len(students)):
-                screen.addstr("Enter the StudentID you want to input mark: ")
-                s_id = screen.getstr().decode()
-                screen.refresh()
-                if s_id in studentID:
-                    screen.addstr("Enter mark of this student in courses: ")
-                    mark = math.floor(float(screen.getstr().decode()))
-                    screen.refresh()
-                    if (mark < 0) or (mark > 20):
-                        curses.init_pair(1, curses.COLOR_RED, curses.COLOR_WHITE)
-                        try:
-                            screen.addstr("Error!!!\n", curses.color_pair(1))
-                        except curses.error:
+        if s_id in studentID:   
+            while True:           
+                screen.addstr("Enter mark of this student in courses: ")
+                mark=math.floor(float(screen.getstr().decode()))
+                if mark<0 or mark>20:
+                    curses.init_pair(1, curses.COLOR_RED, curses.COLOR_WHITE)
+                    try:
+                        screen.addstr("Error!!!\n", curses.color_pair(1))
+                    except curses.error:
                             pass
-                        screen.refresh()
-                        curses.napms(2000)
-                        screen.clear()   
-                        screen.refresh()
-                        screen.addstr("Please enter number in range (0,20): \n")
-                        mark = math.floor(float(screen.getstr().decode()))
+                    screen.refresh()
+                    curses.napms(1000)
+                    screen.clear()
+                    screen.refresh()
+                    screen.addstr("Please enter number in range (0,20): \n")
+                    mark=math.floor(float(screen.getstr().decode()))
                 else:
-                    exit()
+                    break  
         else:
             exit()
-    m = Mark(c_id,s_id,mark)
+    else:
+        exit() 
     mark_detail.append(mark)
+    m = Mark(s_id,c_id,mark)
     marks.append(m)
-
+    
 # function to assign gpa in mark list
 def calculation_Gpa():     
     value=np.array([mark_detail])
-    points=np.array([Course_credit])
-    screen.addstr("enter student id you want to calculate gpa:")
+    points=np.array([course_Credit])
+    screen.addstr("Enter studentID you want to calculate gpa:")
     id =screen.getstr().decode()
     if id in studentID:
         for i in range(len(marks)):
             totalCredit=np.sum(points)
             totalValue=np.sum(np.multiply(value,points))
             screen.refresh()
-            gpa=totalValue/totalCredit
+            gpa = totalValue/totalCredit
             screen.refresh()                
     else: 
         return 0
@@ -216,7 +224,7 @@ def calculation_Gpa():
     for m in marks:
         screen.clear()
         screen.refresh()
-        screen.addstr(" [Mark_studentid: ] %s   [Gpa: ]%s \n" %(m.get_cid(), gpa))
+        screen.addstr(" [Mark_studentID: ] %s   [Gpa: ]%s \n" %(m.get_cid(), gpa))
         screen.refresh()
         break
     
@@ -237,7 +245,7 @@ def display_course():
     screen.refresh()
     for c in courses:
         try:
-            screen.addstr("CourseID: %s     CourseName: %s \n" % (c.get_id(), c.get_name()))
+            screen.addstr("CourseID: %s     CourseName: %s    CourseCređit: %s\n" % (c.get_id(), c.get_name(), c.get_credit()))
         except curses.error:
             pass
         screen.refresh()
@@ -246,62 +254,102 @@ def display_course():
 def display_mark():
     for m in marks:
         try:
-            screen.addstr("Mark_coursesid: %s     Mark_studentid: %s    Mark_mark: %s \n" % (m.get_cid(), m.get_sid(), m.get_mark()))
+            screen.addstr("CourseID: %s     StudentID: %s    Mark_detail: %s \n" % (m.get_cid(), m.get_sid(), m.get_mark()))
         except curses.error:
             pass
         screen.refresh()
-
+        
 #function to sort GPA decending
 def GPA_decending():
     arr=np.array([mark_gpa])  
     arr[::-1].sort()
     screen.addstr("The list after sorting is %s: \n"%(arr))
     screen.refresh()
-    
+
+
 #main function
 def main():
-    # add student into students list
-    n = int(number_student())
-    for i in range(0,n):
-        add_student()
-    display_student()
-
-    # add course into courses list
-    num = int(number_course())
-    for i in range(0,num):
-        add_course()
-    display_course()
-
-    # choose course to enter the mark of student
-    assign_mark()
-    
-    # calculate gpa of student
-    calculation_Gpa()
-    
     screen.refresh()
     screen.clear()
     try:
-        screen.addstr(0,5, "Do you want to see mark of all student ?")
+        screen.addstr(0,5, "Do you want to input student and courses ?")
         screen.addstr(1,5, "1. Yes")
         screen.addstr(2,5, "2. No \n")
     except curses.error:
         pass
-    option = int(screen.getstr().decode())
-    if option == 1:
-        screen.clear()
-        screen.addstr("Hence, This is table mark of students")
+    option1 = int(screen.getstr().decode()) 
+    while True:
+        if option1 == 1:
+            screen.clear()
+            N_co = int(number_course())
+            screen.clear()
+            screen.refresh()
+            for i in range (N_co):
+                screen.addstr(f"Course {i+1} \n")
+                add_course()
+                screen.refresh()
+                N_st = int(number_student())
+                screen.refresh()
+                screen.clear()
+                for i in range (N_st):
+                    screen.addstr(f"Student {i+1} \n")
+                    add_student()
+                    screen.refresh()
+                    screen.clear()
+                    assign_mark()
+                    screen.clear()
+                    screen.refresh()
+            break
+        else:
+            screen.addstr("say goodbye!!")
+            curses.napms(2000)
+            curses.endwin()
+            exit()
+            
+    screen.refresh()
+    screen.clear()
+    try:
+        screen.addstr(0,5, "Do you want to calculater GPA of student ?")
+        screen.addstr(1,5, "1. Yes")
+        screen.addstr(2,5, "2. No \n")
+    except curses.error:
+        pass
+    option2 = int(screen.getstr().decode())
+    if option2 == 1:
         screen.refresh()
+        calculation_Gpa()
+        curses.napms(2000)
         screen.clear()
-        curses.napms(3000)
-        display_mark()
-        screen.addstr("Hence, This is table mark of students after sort GPA descending: ")
         screen.refresh()
-        curses.napms(3000)
-        GPA_decending()
     else:
         screen.addstr("say goodbye!!")
         curses.napms(2000)
         curses.endwin()
-
+    
+    while True:
+        screen.addstr("1. Display list of Students: \n")
+        screen.addstr("2. Display list of Courses: \n") 
+        screen.addstr("3. Display marks \n")
+        screen.addstr("4. GPA_descending \n")
+        screen.addstr("5. Stop \n")
+        option3 = int(screen.getstr().decode())
+        screen.refresh()
+        screen.clear()
+        screen.refresh()
+        if option3 == 1:
+            display_student()
+        if option3 == 2:
+            display_course()
+        if option3 == 3:
+            display_mark()
+        if option3 == 4:
+            GPA_decending()
+        elif option3 == 5:
+            screen.addstr("  Good bye,see you again\n  ")
+            screen.refresh()
+            curses.napms(1000)
+            curses.endwin()
+            exit()  
 if __name__ == '__main__':
     main()
+    

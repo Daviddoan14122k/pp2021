@@ -1,3 +1,6 @@
+marks = []
+mark_detail = []
+mark_gpa = []
 
 #----------------------------- Marks -----------------------------#
 class Mark:
@@ -22,4 +25,5 @@ class Mark:
     
     def set_gpa(self, gpa):
         self.gpa = gpa
+    
     

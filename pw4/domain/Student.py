@@ -1,4 +1,7 @@
-
+students = []
+studentID = []
+studentName = []
+studentDoB = []
 #----------------------------- Students -----------------------------#
 class Student:
     def __init__(self, id, name, DoB):
@@ -14,4 +17,6 @@ class Student:
     
     def get_DoB(self):
         return self.DoB
+    
+    
     

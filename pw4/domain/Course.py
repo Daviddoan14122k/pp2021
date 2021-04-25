@@ -1,3 +1,7 @@
+courses = []
+courseID = []
+course_Credit = []
+courseName = []
 
 #----------------------------- Courses -----------------------------#
 class Course:
