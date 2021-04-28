@@ -2,6 +2,7 @@ import pickle
 import curses
 from zipfile import ZipFile
 import os
+# from module import methods
 from output import main_out
 from input import main_in
 from domain.Student import *
@@ -121,7 +122,6 @@ def main():
             curses.napms(1000)
             curses.endwin()
             exit()
-        
               
 if __name__ == '__main__':
     main()
